@@ -2,11 +2,14 @@ package com.heschlie.vlablookup.vlab;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -49,6 +52,15 @@ public class MainActivity extends ListActivity {
 
         deviceList = new ArrayList<HashMap<String, String>>();
         ListView lv = getListView();
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent in = new Intent(getApplicationContext(), SingleDeviceActivity.class);
+                in.putExtra("device", deviceList.get(i));
+                startActivity(in);
+            }
+        });
 
         new GetContacts().execute();
     }

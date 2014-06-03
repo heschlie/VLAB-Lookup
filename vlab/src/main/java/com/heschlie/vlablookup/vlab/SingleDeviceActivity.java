@@ -49,9 +49,9 @@ public class SingleDeviceActivity extends Activity{
         TextView lblOwner = (TextView) findViewById(R.id.device_owner);
 
         lblName.setText(name);
-        lblLocation.setText(location + " Altitude: " + altitude);
-        lblTermsrv.setText(termsrv + " Port: " + termsrvPort);
-        lblRpb.setText(rpb + " Plug: " + rpbPlug);
+        lblLocation.setText(location + "\n    Altitude: " + altitude);
+        lblTermsrv.setText(termsrv + "\n    Port: " + termsrvPort);
+        lblRpb.setText(rpb + "\n    Plug: " + rpbPlug);
         lblOwner.setText(owner);
     }
 }
