@@ -23,7 +23,7 @@
 
     <!-- Email Label -->
     <TextView
-        android:id="@+id/email"
+        android:id="@+id/location"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="2dip"
@@ -32,7 +32,7 @@
 
     <!-- Mobile Number -->
     <TextView
-        android:id="@+id/mobile"
+        android:id="@+id/altitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="left"
