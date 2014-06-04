@@ -11,5 +11,6 @@
     <string name="rpb">RPB: </string>
     <string name="btn_interfaces">Interfaces</string>
     <string name="editText_hint">Enter resource name</string>
+    <string name="iface_title">Interfaces: </string>
 
 </resources>

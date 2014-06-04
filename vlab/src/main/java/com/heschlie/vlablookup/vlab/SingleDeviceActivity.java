@@ -1,8 +1,18 @@
 package com.heschlie.vlablookup.vlab;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -11,6 +21,9 @@ import java.util.HashMap;
  * Brought to you by Stephen Schlie
  */
 public class SingleDeviceActivity extends Activity{
+
+    private HashMap<String, HashMap<String, String>> ifaces;
+    private String ifaceNames;
 
     // JSON Node names
     private static final String TAG_NAME = "name";
@@ -21,17 +34,57 @@ public class SingleDeviceActivity extends Activity{
     private static final String TAG_OWNER = "owner";
     private static final String TAG_RPB = "rpb";
     private static final String TAG_RPB_PLUG = "rpb_plug";
+    private static final String TAG_IFACE = "interfaces";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_device);
 
+        ifaceNames = "";
+
         // get our intent
         Intent in = getIntent();
 
         // get the hashmap containing the device info
         HashMap<String, String> device = (HashMap<String, String>) in.getSerializableExtra("device");
+
+        // Check for the Hashmap for interfaces
+        if (in.hasExtra("interfaces")) {
+
+            ifaces = (HashMap<String, HashMap<String, String>>) in.getSerializableExtra("interfaces");
+            TableLayout layout = (TableLayout) findViewById(R.id.single_table);
+            FrameLayout frame = new FrameLayout(SingleDeviceActivity.this, null, R.style.AppTheme);
+            Button button = new Button(this);
+            button.setText("interfaces");
+            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            button.setLayoutParams(new ActionBar.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    Gravity.CENTER
+            ));
+            frame.addView(button);
+            layout.addView(frame);
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent in = new Intent(getApplicationContext(), InterfaceActivity.class);
+                    in.putExtra("interfaces", ifaces);
+
+                    startActivity(in);
+                }
+            });
+
+            // Putting all the interface names into a String for the textview
+            for (String key : ifaces.keySet()) {
+                if (ifaceNames.equals("")) {
+                    ifaceNames += key;
+                } else {
+                    ifaceNames += "\n" + key;
+                }
+            }
+        }
 
         String name = device.get(TAG_NAME);
         String termsrv = device.get(TAG_TERMSRV);
@@ -48,12 +101,14 @@ public class SingleDeviceActivity extends Activity{
         TextView lblTermsrv = (TextView) findViewById(R.id.device_termsrv);
         TextView lblRpb = (TextView) findViewById(R.id.device_rpb);
         TextView lblOwner = (TextView) findViewById(R.id.device_owner);
+        TextView lblIfaces = (TextView) findViewById(R.id.interfaces);
 
         lblName.setText(name);
         lblLocation.setText(location);
         lblAltitude.setText(altitude);
         lblTermsrv.setText(termsrv + "  p" + termsrvPort);
         lblRpb.setText(rpb + "  p" + rpbPlug);
+        lblIfaces.setText(ifaceNames);
         lblOwner.setText(owner);
     }
 }

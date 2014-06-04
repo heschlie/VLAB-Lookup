@@ -26,6 +26,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 
 public class MainActivity extends ListActivity {
@@ -52,7 +53,7 @@ public class MainActivity extends ListActivity {
     ArrayList<HashMap<String, String>> deviceList;
 
     //Hashmap for interfaces
-    HashMap<String, HashMap<String, String>> interfacesMap;
+    ArrayList<HashMap<String, HashMap<String, String>>> interfacesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,7 @@ public class MainActivity extends ListActivity {
         setContentView(R.layout.activity_main);
 
         deviceList = new ArrayList<HashMap<String, String>>();
-        interfacesMap = new HashMap<String, HashMap<String, String>>();
+        interfacesList = new ArrayList<HashMap<String, HashMap<String, String>>>();
 
         ListView lv = getListView();
 
@@ -69,6 +70,11 @@ public class MainActivity extends ListActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent in = new Intent(getApplicationContext(), SingleDeviceActivity.class);
                 in.putExtra("device", deviceList.get(i));
+                if (interfacesList.get(i) != null){
+                    Log.d("Debug: ", "asdf");
+                    in.putExtra("interfaces", interfacesList.get(i));
+                }
+
                 startActivity(in);
             }
         });
@@ -186,16 +192,36 @@ public class MainActivity extends ListActivity {
             device.put(TAG_OWNER, owner);
 
             if (d.has("interfaces")) {
+                Log.d("Debug: ", "loading interfaces");
                 JSONObject i = d.getJSONObject("interfaces");
-                getInterfaces(i);
+                interfacesList.add(0, getInterfaces(i));
+            } else {
+                interfacesList.add(0, null);
             }
 
             return device;
         }
 
-        private HashMap<String, String> getInterfaces(JSONObject i) {
+        // We have to loop through these in a more pragmatic way as we don't know the names of each
+        // field for absolute certainty
+        private HashMap<String, HashMap<String, String>> getInterfaces(JSONObject ifaces) throws JSONException {
+            HashMap<String, HashMap<String, String>> interfaces = new HashMap<String, HashMap<String, String>>();
+            HashMap<String, String> ifaceFields = new HashMap<String, String>();
 
-            return null;
+            // Loop through interfaces
+             for (Iterator<String> ifacesIter = ifaces.keys(); ifacesIter.hasNext();){
+                 String name = ifacesIter.next();
+                 JSONObject i = ifaces.getJSONObject(name);
+                 // Loop through interface fields.
+                 for (Iterator<String> fIter = i.keys(); fIter.hasNext();){
+                     String field = fIter.next();
+                     String value = i.getString(field);
+                     ifaceFields.put(field, value);
+                 }
+                 interfaces.put(name, ifaceFields);
+            }
+
+            return interfaces;
         }
 
         @Override
