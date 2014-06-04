@@ -1,7 +1,10 @@
 package com.heschlie.vlablookup.vlab;
 
+import android.util.Log;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -66,10 +69,16 @@ public class ServiceHandler {
                 }
                 HttpGet httpGet = new HttpGet(url);
                 httpResponse = httpClient.execute(httpGet);
+
             }
 
-            httpEntity = httpResponse.getEntity();
-            response = EntityUtils.toString(httpEntity);
+            if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                response = "404";
+            } else {
+                httpEntity = httpResponse.getEntity();
+                response = EntityUtils.toString(httpEntity);
+            }
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (ClientProtocolException e) {

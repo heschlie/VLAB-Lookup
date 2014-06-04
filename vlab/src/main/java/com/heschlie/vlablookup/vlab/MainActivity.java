@@ -1,8 +1,10 @@
 package com.heschlie.vlablookup.vlab;
 
+import android.app.AlertDialog;
 import android.app.ExpandableListActivity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,6 +36,7 @@ public class MainActivity extends ListActivity {
     private static final String urlPrefix = "http://json.lab.nbttech.com/v1/resources/names/";
     public String url;
     private EditText editText;
+    public String lastDevice;
 
     // JSON Node names
     private static final String TAG_NAME = "name";
@@ -77,12 +80,13 @@ public class MainActivity extends ListActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                url = editText.getText().toString();
-                url = urlPrefix + url;
+                lastDevice = editText.getText().toString();
+                url = urlPrefix + lastDevice;
 
-                new GetDevices().execute();
-
-                editText.setText("");
+                if (!lastDevice.equals("")) {
+                    new GetDevices().execute();
+                    editText.setText("");
+                }
             }
         });
     }
@@ -108,10 +112,13 @@ public class MainActivity extends ListActivity {
     }
 
     private class GetDevices extends AsyncTask<Void, Void, Void> {
+        AlertDialog.Builder alertDialog;
+        boolean error;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            alertDialog = new AlertDialog.Builder(MainActivity.this);
             // showing dialog
             pDialog = new ProgressDialog(MainActivity.this);
             pDialog.setMessage("Please Wait...");
@@ -130,15 +137,23 @@ public class MainActivity extends ListActivity {
             //Log.d("Response: ", "> " + jsonStr);
 
             if (jsonStr != null) {
-                try {
-                    JSONObject d = new JSONObject(jsonStr);
-                    HashMap<String, String> device = getDeviceInfo(d);
+                // Error if no device is found
+                if (jsonStr.equals("404")) {
+                    error = true;
+                } else {
+                    try {
+                        JSONObject d = new JSONObject(jsonStr);
+                        HashMap<String, String> device = getDeviceInfo(d);
 
-                    // adding device to list
-                    deviceList.add(0, device);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                        // adding device to list
+                        deviceList.add(0, device);
+                        error = false;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
+
+
             } else {
                 Log.e("ServiceHandler", "Couldn't get any data from the url");
             }
@@ -189,6 +204,22 @@ public class MainActivity extends ListActivity {
             // dismiss the progress dialog
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
+            }
+
+            if (error) {
+                pDialog.dismiss();
+                alertDialog.setTitle("Resource not found!");
+                alertDialog
+                        .setMessage(lastDevice + " was not found VLAB")
+                        .setCancelable(false)
+                        .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+                AlertDialog alert = alertDialog.create();
+                alert.show();
             }
 
             // update parsed json into listview
