@@ -93,7 +93,6 @@ public class MainActivity extends ListActivity {
                 return true;
             }
         });
-        new GetDevices().execute("oak-sh100");
 
         // adding hooks for Go! button
         Button button = (Button) findViewById(R.id.submit_button);
@@ -169,6 +168,14 @@ public class MainActivity extends ListActivity {
                         try {
                             JSONObject d = new JSONObject(jsonStr);
                             HashMap<String, String> device = getDeviceInfo(d);
+
+                            for (int i = 0; i < deviceList.size(); i++) {
+                                HashMap<String, String> dev = deviceList.get(i);
+                                if (dev.get(TAG_NAME).equals(device.get(TAG_NAME))) {
+                                    deviceList.remove(i);
+                                }
+                            }
+
 
                             // adding device to list
                             deviceList.add(0, device);
