@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,9 +34,9 @@ public class MainActivity extends ListActivity {
 
     // URL to get JSON
     private static final String urlPrefix = "http://json.lab.nbttech.com/v1/resources/names/";
-    public String url;
+    //public String url;
     private EditText editText;
-    public String lastDevice;
+    public String textInput;
 
     // JSON Node names
     private static final String TAG_NAME = "name";
@@ -77,19 +79,33 @@ public class MainActivity extends ListActivity {
         });
 
         editText = (EditText) findViewById(R.id.res_entry);
-        url = urlPrefix + "oak-sh100";
-        new GetDevices().execute();
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                textInput = editText.getText().toString();
+
+                if (!textInput.equals("")) {
+                    String[] split = textInput.split("\\s+");
+                    new GetDevices().execute(split);
+
+                    editText.setText("");
+                }
+                return true;
+            }
+        });
+        new GetDevices().execute("oak-sh100");
 
         // adding hooks for Go! button
         Button button = (Button) findViewById(R.id.submit_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                lastDevice = editText.getText().toString();
-                url = urlPrefix + lastDevice;
+                textInput = editText.getText().toString();
 
-                if (!lastDevice.equals("")) {
-                    new GetDevices().execute();
+                if (!textInput.equals("")) {
+                    String[] split = textInput.split("\\s+");
+                    new GetDevices().execute(split);
+
                     editText.setText("");
                 }
             }
@@ -116,7 +132,7 @@ public class MainActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class GetDevices extends AsyncTask<Void, Void, Void> {
+    private class GetDevices extends AsyncTask<String, Void, Integer> {
         AlertDialog.Builder alertDialog;
         boolean error;
 
@@ -132,37 +148,42 @@ public class MainActivity extends ListActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Integer doInBackground(String... urls) {
+
             // Creating service handler class instance
             ServiceHandler sh = new ServiceHandler();
 
-            // Making a request to url and getting response
-            String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
+            int deviceCount = urls.length;
 
-            //Log.d("Response: ", "> " + jsonStr);
+            for (String url : urls) {
+                // Making a request to url and getting response
+                String jsonStr = sh.makeServiceCall(urlPrefix + url, ServiceHandler.GET);
 
-            if (jsonStr != null) {
-                // Error if no device is found
-                if (jsonStr.equals("404")) {
-                    error = true;
-                } else {
-                    try {
-                        JSONObject d = new JSONObject(jsonStr);
-                        HashMap<String, String> device = getDeviceInfo(d);
+                //Log.d("Response: ", "> " + jsonStr);
 
-                        // adding device to list
-                        deviceList.add(0, device);
-                        error = false;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                if (jsonStr != null) {
+                    // Error if no device is found
+                    if (jsonStr.equals("404")) {
+                        error = true;
+                    } else {
+                        try {
+                            JSONObject d = new JSONObject(jsonStr);
+                            HashMap<String, String> device = getDeviceInfo(d);
+
+                            // adding device to list
+                            deviceList.add(0, device);
+                            error = false;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
+
+
+                } else {
+                    Log.e("ServiceHandler", "Couldn't get any data from the url");
                 }
-
-
-            } else {
-                Log.e("ServiceHandler", "Couldn't get any data from the url");
             }
-            return null;
+            return deviceCount;
         }
 
         // Grabs interesting info form JSONObject
@@ -228,8 +249,8 @@ public class MainActivity extends ListActivity {
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Integer deviceCount) {
+            super.onPostExecute(deviceCount);
             // dismiss the progress dialog
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
@@ -239,7 +260,7 @@ public class MainActivity extends ListActivity {
                 pDialog.dismiss();
                 alertDialog.setTitle("Resource not found!");
                 alertDialog
-                        .setMessage(lastDevice + " was not found VLAB")
+                        .setMessage(textInput + " was not found VLAB")
                         .setCancelable(false)
                         .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                             @Override
@@ -259,6 +280,16 @@ public class MainActivity extends ListActivity {
             );
 
             setListAdapter(adapter);
+
+            if (deviceCount == 1) {
+                Intent in = new Intent(getApplicationContext(), SingleDeviceActivity.class);
+                in.putExtra("device", deviceList.get(0));
+                if (interfacesList.get(0) != null){
+                    in.putExtra("interfaces", interfacesList.get(0));
+                }
+
+                startActivity(in);
+            }
         }
     }
 }
