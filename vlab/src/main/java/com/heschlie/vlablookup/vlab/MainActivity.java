@@ -1,7 +1,6 @@
 package com.heschlie.vlablookup.vlab;
 
 import android.app.AlertDialog;
-import android.app.ExpandableListActivity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -15,11 +14,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.SimpleExpandableListAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,8 +24,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 
 public class MainActivity extends ListActivity {
@@ -212,9 +207,6 @@ public class MainActivity extends ListActivity {
 
             HashMap<String, HashMap<String, String>> interfaces = new HashMap<String, HashMap<String, String>>();
 
-
-
-
             // Loop through interfaces
              for (Iterator<String> ifacesIter = ifaces.keys(); ifacesIter.hasNext();){
                  String name = ifacesIter.next();
@@ -228,19 +220,8 @@ public class MainActivity extends ListActivity {
                      //System.out.println(field + ": " + value);
                      ifaceFields.put(field, value);
                  }
+
                  interfaces.put(name, ifaceFields);
-            }
-
-            for (Map.Entry<String, HashMap<String, String>> entry : interfaces.entrySet()) {
-                String name = entry.getKey();
-                HashMap<String, String> details = entry.getValue();
-
-                System.out.println("Name: " + name);
-                for (Map.Entry<String, String> entry1 : details.entrySet()) {
-                    String key = entry1.getKey();
-                    String value = entry1.getValue();
-                    System.out.println(key + ": " + value);
-                }
             }
 
             return interfaces;

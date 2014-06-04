@@ -1,22 +1,12 @@
 package com.heschlie.vlablookup.vlab;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 /**
  * Brought to you by Stephen Schlie
@@ -54,28 +44,28 @@ public class SingleDeviceActivity extends Activity{
         if (in.hasExtra("interfaces")) {
 
             ifaces = (HashMap<String, HashMap<String, String>>) in.getSerializableExtra("interfaces");
-            TableLayout layout = (TableLayout) findViewById(R.id.single_table);
-            FrameLayout frame = new FrameLayout(SingleDeviceActivity.this, null, R.style.AppTheme);
-            Button button = new Button(this);
-            button.setText("interfaces");
-            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-            button.setLayoutParams(new ActionBar.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    Gravity.CENTER
-            ));
-            frame.addView(button);
-            layout.addView(frame);
-
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent in = new Intent(getApplicationContext(), InterfaceActivity.class);
-                    in.putExtra("interfaces", ifaces);
-
-                    startActivity(in);
-                }
-            });
+//            TableLayout layout = (TableLayout) findViewById(R.id.single_table);
+//            FrameLayout frame = new FrameLayout(SingleDeviceActivity.this, null, R.style.AppTheme);
+//            Button button = new Button(this);
+//            button.setText("interfaces");
+//            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+//            button.setLayoutParams(new ActionBar.LayoutParams(
+//                    ViewGroup.LayoutParams.WRAP_CONTENT,
+//                    ViewGroup.LayoutParams.WRAP_CONTENT,
+//                    Gravity.CENTER
+//            ));
+//            frame.addView(button);
+//            layout.addView(frame);
+//
+//            button.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Intent in = new Intent(getApplicationContext(), InterfaceActivity.class);
+//                    in.putExtra("interfaces", ifaces);
+//
+//                    startActivity(in);
+//                }
+//            });
 
             // Putting all the interface names into a String for the textview
             for (String key : ifaces.keySet()) {
@@ -111,5 +101,18 @@ public class SingleDeviceActivity extends Activity{
         lblRpb.setText(rpb + "  p" + rpbPlug);
         lblIfaces.setText(ifaceNames);
         lblOwner.setText(owner);
+
+        // Making the interfaces clickable
+        if (in.hasExtra("interfaces")) {
+            lblIfaces.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent in = new Intent(getApplicationContext(), InterfaceActivity.class);
+                    in.putExtra("interfaces", ifaces);
+
+                    startActivity(in);
+                }
+            });
+        }
     }
 }

@@ -3,7 +3,9 @@ package com.heschlie.vlablookup.vlab;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +16,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by heschlie on 6/4/2014.
@@ -39,6 +38,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         for (Map.Entry<String, HashMap<String, String>> entry : ifaces.entrySet()) {
             String key = entry.getKey();
             index.add(key);
+            Log.d("Key set: ", key);
         }
         return index;
     }
@@ -60,7 +60,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int i) {
-        return ifaces.get(keyIndex.get(i)).size();
+        return 1;
     }
 
     @Override
@@ -100,27 +100,28 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
         TextView item = (TextView) view.findViewById(R.id.iface);
         item.setTypeface(null, Typeface.BOLD);
+        item.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
         item.setText(iface);
         return view;
     }
 
     @Override
     public View getChildView(int i, int i2, boolean b, View view, ViewGroup viewGroup) {
-        Pair<String, String> child = (Pair<String, String>) getChild(i, i2);
+        //Pair<String, String> child = (Pair<String, String>) getChild(i, i2);
+        HashMap<String, String> child = ifaces.get(keyIndex.get(i));
         LayoutInflater inflater = context.getLayoutInflater();
 
-        if (view == null) {
-            view = inflater.inflate(R.layout.child_item, null);
+        view = inflater.inflate(R.layout.child_item, null);
+        TableLayout layout = (TableLayout) view;
 
-            TableLayout layout = (TableLayout) view;
-
+        for (Map.Entry<String, String> entry : child.entrySet()) {
             TextView keyText = new TextView(context);
             keyText.setTextAppearance(context, R.style.col1);
-            keyText.setText(child.first + ": ");
+            keyText.setText(entry.getKey() + ": ");
 
             TextView valText = new TextView(context);
             valText.setTextAppearance(context, R.style.col2);
-            valText.setText(child.second);
+            valText.setText(entry.getValue());
 
             TableRow tr = new TableRow(context);
             tr.addView(keyText);
