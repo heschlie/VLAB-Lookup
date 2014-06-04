@@ -52,8 +52,8 @@ public class SingleDeviceActivity extends Activity{
         lblName.setText(name);
         lblLocation.setText(location);
         lblAltitude.setText(altitude);
-        lblTermsrv.setText(termsrv + " p" + termsrvPort);
-        lblRpb.setText(rpb + " p" + rpbPlug);
+        lblTermsrv.setText(termsrv + "  p" + termsrvPort);
+        lblRpb.setText(rpb + "  p" + rpbPlug);
         lblOwner.setText(owner);
     }
 }

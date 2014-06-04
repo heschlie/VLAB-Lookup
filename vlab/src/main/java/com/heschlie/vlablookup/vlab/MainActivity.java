@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -29,7 +31,9 @@ public class MainActivity extends ListActivity {
     private ProgressDialog pDialog;
 
     // URL to get JSON
-    private static String url = "http://json.lab.nbttech.com/v1/resources/names/oak-sh100";
+    private static final String urlPrefix = "http://json.lab.nbttech.com/v1/resources/names/";
+    public String url;
+    private EditText editText;
 
     // JSON Node names
     private static final String TAG_NAME = "name";
@@ -41,8 +45,11 @@ public class MainActivity extends ListActivity {
     private static final String TAG_RPB = "rpb";
     private static final String TAG_RPB_PLUG = "rpb_plug";
 
-    // Hashmap for Listview
+    // list of Hashmap for Listview
     ArrayList<HashMap<String, String>> deviceList;
+
+    //Hashmap for interfaces
+    HashMap<String, HashMap<String, String>> interfacesMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,8 @@ public class MainActivity extends ListActivity {
         setContentView(R.layout.activity_main);
 
         deviceList = new ArrayList<HashMap<String, String>>();
+        interfacesMap = new HashMap<String, HashMap<String, String>>();
+
         ListView lv = getListView();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -61,7 +70,21 @@ public class MainActivity extends ListActivity {
             }
         });
 
-        new GetDevices().execute();
+        editText = (EditText) findViewById(R.id.res_entry);
+
+        // adding hooks for Go! button
+        Button button = (Button) findViewById(R.id.submit_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                url = editText.getText().toString();
+                url = urlPrefix + url;
+
+                new GetDevices().execute();
+
+                editText.setText("");
+            }
+        });
     }
 
 
@@ -112,7 +135,7 @@ public class MainActivity extends ListActivity {
                     HashMap<String, String> device = getDeviceInfo(d);
 
                     // adding device to list
-                    deviceList.add(device);
+                    deviceList.add(0, device);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

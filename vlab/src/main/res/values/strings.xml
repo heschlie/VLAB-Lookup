@@ -9,5 +9,7 @@
     <string name="altitude">Altitude: </string>
     <string name="termsrv">Termsrv: </string>
     <string name="rpb">RPB: </string>
+    <string name="btn_interfaces">Interfaces</string>
+    <string name="editText_hint">Enter resource name</string>
 
 </resources>
