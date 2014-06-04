@@ -4,5 +4,10 @@
     <string name="app_name">VLAB Lookup</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="owner">Owner: </string>
+    <string name="test">Test123 test</string>
+    <string name="altitude">Altitude: </string>
+    <string name="termsrv">Termsrv: </string>
+    <string name="rpb">RPB: </string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.heschlie.vlablookup.vlab;
 
+import android.app.ExpandableListActivity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,11 +11,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ExpandableListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.SimpleExpandableListAdapter;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,9 +41,6 @@ public class MainActivity extends ListActivity {
     private static final String TAG_RPB = "rpb";
     private static final String TAG_RPB_PLUG = "rpb_plug";
 
-    // contacts JSONArray
-    JSONArray contacts = null;
-
     // Hashmap for Listview
     ArrayList<HashMap<String, String>> deviceList;
 
@@ -62,7 +61,7 @@ public class MainActivity extends ListActivity {
             }
         });
 
-        new GetContacts().execute();
+        new GetDevices().execute();
     }
 
 
@@ -85,7 +84,7 @@ public class MainActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class GetContacts extends AsyncTask<Void, Void, Void> {
+    private class GetDevices extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -105,33 +104,12 @@ public class MainActivity extends ListActivity {
             // Making a request to url and getting response
             String jsonStr = sh.makeServiceCall(url, ServiceHandler.GET);
 
-            Log.d("Response: ", "> " + jsonStr);
+            //Log.d("Response: ", "> " + jsonStr);
 
             if (jsonStr != null) {
                 try {
                     JSONObject d = new JSONObject(jsonStr);
-
-                    String name = d.getString(TAG_NAME);
-                    String location = d.getString(TAG_LOCATION);
-                    String altitude = d.getString(TAG_ALTITUDE);
-                    String termsrv = d.getString(TAG_TERMSRV);
-                    String termsrvPort = d.getString(TAG_TERMSRV_PORT);
-                    String rpb = d.getString(TAG_RPB);
-                    String rpbPlug = d.getString(TAG_RPB_PLUG);
-                    String owner = d.getString(TAG_OWNER);
-
-                    // tmp map for single device
-                    HashMap<String, String> device = new HashMap<String, String>();
-
-                    // adding each child node to map
-                    device.put(TAG_NAME, name);
-                    device.put(TAG_LOCATION, location);
-                    device.put(TAG_ALTITUDE, altitude);
-                    device.put(TAG_TERMSRV, termsrv);
-                    device.put(TAG_TERMSRV_PORT, termsrvPort);
-                    device.put(TAG_RPB, rpb);
-                    device.put(TAG_RPB_PLUG, rpbPlug);
-                    device.put(TAG_OWNER, owner);
+                    HashMap<String, String> device = getDeviceInfo(d);
 
                     // adding device to list
                     deviceList.add(device);
@@ -141,6 +119,44 @@ public class MainActivity extends ListActivity {
             } else {
                 Log.e("ServiceHandler", "Couldn't get any data from the url");
             }
+            return null;
+        }
+
+        // Grabs interesting info form JSONObject
+        private HashMap<String, String> getDeviceInfo(JSONObject d) throws JSONException {
+
+            String name = d.getString(TAG_NAME);
+            String location = d.getString(TAG_LOCATION);
+            String altitude = d.getString(TAG_ALTITUDE);
+            String termsrv = d.getString(TAG_TERMSRV);
+            String termsrvPort = d.getString(TAG_TERMSRV_PORT);
+            String rpb = d.getString(TAG_RPB);
+            String rpbPlug = d.getString(TAG_RPB_PLUG);
+            String owner = d.getString(TAG_OWNER);
+
+            // tmp map for single device
+            HashMap<String, String> device = new HashMap<String, String>();
+
+            // adding each child node to map
+            device.put(TAG_NAME, name);
+            device.put(TAG_LOCATION, location);
+            device.put(TAG_ALTITUDE, altitude);
+            device.put(TAG_TERMSRV, termsrv);
+            device.put(TAG_TERMSRV_PORT, termsrvPort);
+            device.put(TAG_RPB, rpb);
+            device.put(TAG_RPB_PLUG, rpbPlug);
+            device.put(TAG_OWNER, owner);
+
+            if (d.has("interfaces")) {
+                JSONObject i = d.getJSONObject("interfaces");
+                getInterfaces(i);
+            }
+
+            return device;
+        }
+
+        private HashMap<String, String> getInterfaces(JSONObject i) {
+
             return null;
         }
 

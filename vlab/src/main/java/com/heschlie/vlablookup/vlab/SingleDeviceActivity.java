@@ -44,14 +44,16 @@ public class SingleDeviceActivity extends Activity{
 
         TextView lblName = (TextView) findViewById(R.id.device_name);
         TextView lblLocation = (TextView) findViewById(R.id.device_location);
+        TextView lblAltitude = (TextView) findViewById(R.id.device_altitude);
         TextView lblTermsrv = (TextView) findViewById(R.id.device_termsrv);
         TextView lblRpb = (TextView) findViewById(R.id.device_rpb);
         TextView lblOwner = (TextView) findViewById(R.id.device_owner);
 
         lblName.setText(name);
-        lblLocation.setText(location + "\n    Altitude: " + altitude);
-        lblTermsrv.setText(termsrv + "\n    Port: " + termsrvPort);
-        lblRpb.setText(rpb + "\n    Plug: " + rpbPlug);
+        lblLocation.setText(location);
+        lblAltitude.setText(altitude);
+        lblTermsrv.setText(termsrv + " p" + termsrvPort);
+        lblRpb.setText(rpb + " p" + rpbPlug);
         lblOwner.setText(owner);
     }
 }
