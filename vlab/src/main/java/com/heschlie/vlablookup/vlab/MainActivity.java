@@ -158,25 +158,24 @@ public class MainActivity extends ListActivity {
                 // Making a request to url and getting response
                 String jsonStr = sh.makeServiceCall(urlPrefix + url, ServiceHandler.GET);
 
-                //Log.d("Response: ", "> " + jsonStr);
+                Log.d("Response: ", "> " + jsonStr);
 
                 if (jsonStr != null) {
                     // Error if no device is found
-                    if (jsonStr.equals("404")) {
+                    if (jsonStr.equals("error")) {
                         error = true;
                     } else {
                         try {
                             JSONObject d = new JSONObject(jsonStr);
                             HashMap<String, String> device = getDeviceInfo(d);
 
+                            // Checking if entry already exists, if so remove it
                             for (int i = 0; i < deviceList.size(); i++) {
                                 HashMap<String, String> dev = deviceList.get(i);
                                 if (dev.get(TAG_NAME).equals(device.get(TAG_NAME))) {
                                     deviceList.remove(i);
                                 }
                             }
-
-
                             // adding device to list
                             deviceList.add(0, device);
                             error = false;
@@ -267,7 +266,7 @@ public class MainActivity extends ListActivity {
                 pDialog.dismiss();
                 alertDialog.setTitle("Resource not found!");
                 alertDialog
-                        .setMessage(textInput + " was not found VLAB")
+                        .setMessage(textInput + " was not found VLAB or server could not be contacted")
                         .setCancelable(false)
                         .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                             @Override
@@ -277,26 +276,28 @@ public class MainActivity extends ListActivity {
                         });
                 AlertDialog alert = alertDialog.create();
                 alert.show();
-            }
+            } else {
+                // update parsed json into listview
+                ListAdapter adapter = new SimpleAdapter(
+                        MainActivity.this, deviceList, R.layout.list_item,
+                        new String[] { TAG_NAME, TAG_LOCATION, TAG_ALTITUDE },
+                        new int[] { R.id.name, R.id.location, R.id.altitude}
+                );
 
-            // update parsed json into listview
-            ListAdapter adapter = new SimpleAdapter(
-                    MainActivity.this, deviceList, R.layout.list_item,
-                    new String[] { TAG_NAME, TAG_LOCATION, TAG_ALTITUDE },
-                    new int[] { R.id.name, R.id.location, R.id.altitude}
-            );
+                setListAdapter(adapter);
 
-            setListAdapter(adapter);
+                if (deviceCount == 1) {
+                    Intent in = new Intent(getApplicationContext(), SingleDeviceActivity.class);
+                    in.putExtra("device", deviceList.get(0));
+                    if (interfacesList.get(0) != null){
+                        in.putExtra("interfaces", interfacesList.get(0));
+                    }
 
-            if (deviceCount == 1) {
-                Intent in = new Intent(getApplicationContext(), SingleDeviceActivity.class);
-                in.putExtra("device", deviceList.get(0));
-                if (interfacesList.get(0) != null){
-                    in.putExtra("interfaces", interfacesList.get(0));
+                    startActivity(in);
                 }
-
-                startActivity(in);
             }
+
+
         }
     }
 }

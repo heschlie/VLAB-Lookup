@@ -44,28 +44,6 @@ public class SingleDeviceActivity extends Activity{
         if (in.hasExtra("interfaces")) {
 
             ifaces = (HashMap<String, HashMap<String, String>>) in.getSerializableExtra("interfaces");
-//            TableLayout layout = (TableLayout) findViewById(R.id.single_table);
-//            FrameLayout frame = new FrameLayout(SingleDeviceActivity.this, null, R.style.AppTheme);
-//            Button button = new Button(this);
-//            button.setText("interfaces");
-//            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-//            button.setLayoutParams(new ActionBar.LayoutParams(
-//                    ViewGroup.LayoutParams.WRAP_CONTENT,
-//                    ViewGroup.LayoutParams.WRAP_CONTENT,
-//                    Gravity.CENTER
-//            ));
-//            frame.addView(button);
-//            layout.addView(frame);
-//
-//            button.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Intent in = new Intent(getApplicationContext(), InterfaceActivity.class);
-//                    in.putExtra("interfaces", ifaces);
-//
-//                    startActivity(in);
-//                }
-//            });
 
             // Putting all the interface names into a String for the textview
             for (String key : ifaces.keySet()) {
