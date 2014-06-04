@@ -27,6 +27,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class MainActivity extends ListActivity {
@@ -61,7 +63,7 @@ public class MainActivity extends ListActivity {
         setContentView(R.layout.activity_main);
 
         deviceList = new ArrayList<HashMap<String, String>>();
-        interfacesList = new ArrayList<HashMap<String, HashMap<String, String>>>();
+        interfacesList = new ArrayList<HashMap<String, HashMap<String,String>>>();
 
         ListView lv = getListView();
 
@@ -80,6 +82,8 @@ public class MainActivity extends ListActivity {
         });
 
         editText = (EditText) findViewById(R.id.res_entry);
+        url = urlPrefix + "oak-sh100";
+        new GetDevices().execute();
 
         // adding hooks for Go! button
         Button button = (Button) findViewById(R.id.submit_button);
@@ -205,20 +209,38 @@ public class MainActivity extends ListActivity {
         // We have to loop through these in a more pragmatic way as we don't know the names of each
         // field for absolute certainty
         private HashMap<String, HashMap<String, String>> getInterfaces(JSONObject ifaces) throws JSONException {
+
             HashMap<String, HashMap<String, String>> interfaces = new HashMap<String, HashMap<String, String>>();
-            HashMap<String, String> ifaceFields = new HashMap<String, String>();
+
+
+
 
             // Loop through interfaces
              for (Iterator<String> ifacesIter = ifaces.keys(); ifacesIter.hasNext();){
                  String name = ifacesIter.next();
+                 //System.out.println("Name: " + name);
                  JSONObject i = ifaces.getJSONObject(name);
+                 HashMap<String, String> ifaceFields = new HashMap<String, String>();
                  // Loop through interface fields.
                  for (Iterator<String> fIter = i.keys(); fIter.hasNext();){
                      String field = fIter.next();
                      String value = i.getString(field);
+                     //System.out.println(field + ": " + value);
                      ifaceFields.put(field, value);
                  }
                  interfaces.put(name, ifaceFields);
+            }
+
+            for (Map.Entry<String, HashMap<String, String>> entry : interfaces.entrySet()) {
+                String name = entry.getKey();
+                HashMap<String, String> details = entry.getValue();
+
+                System.out.println("Name: " + name);
+                for (Map.Entry<String, String> entry1 : details.entrySet()) {
+                    String key = entry1.getKey();
+                    String value = entry1.getValue();
+                    System.out.println(key + ": " + value);
+                }
             }
 
             return interfaces;

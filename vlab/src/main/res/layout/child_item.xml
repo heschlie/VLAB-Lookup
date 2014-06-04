@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:shrinkColumns="0"
+    android:stretchColumns="1"
+    >
+
+    <!--<TableRow>-->
+
+        <!--<TextView-->
+            <!--style="@style/col1"-->
+            <!---->
+            <!--/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/iface_device"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingLeft="25dp" />-->
+
+    <!--</TableRow>-->
+
+
+    <!--<TextView-->
+        <!--android:id="@+id/iface_wired_to"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingLeft="25dp"-->
+        <!--/>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/iface_addr"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingLeft="25dp"-->
+        <!--/>-->
+
+</TableLayout>

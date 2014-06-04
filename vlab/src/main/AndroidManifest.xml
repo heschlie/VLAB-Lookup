@@ -22,6 +22,10 @@
             android:name=".SingleDeviceActivity"
             android:label="Device" >
         </activity>
+        <activity
+            android:name=".InterfaceActivity"
+            android:label="Interfaces"
+        />
     </application>
 
 </manifest>
