@@ -70,7 +70,6 @@ public class MainActivity extends ListActivity {
                 Intent in = new Intent(getApplicationContext(), SingleDeviceActivity.class);
                 in.putExtra("device", deviceList.get(i));
                 if (interfacesList.get(i) != null){
-                    Log.d("Debug: ", "asdf");
                     in.putExtra("interfaces", interfacesList.get(i));
                 }
 
@@ -158,7 +157,7 @@ public class MainActivity extends ListActivity {
                 // Making a request to url and getting response
                 String jsonStr = sh.makeServiceCall(urlPrefix + url, ServiceHandler.GET);
 
-                Log.d("Response: ", "> " + jsonStr);
+                //Log.d("Response: ", "> " + jsonStr);
 
                 if (jsonStr != null) {
                     // Error if no device is found
@@ -194,15 +193,32 @@ public class MainActivity extends ListActivity {
 
         // Grabs interesting info form JSONObject
         private HashMap<String, String> getDeviceInfo(JSONObject d) throws JSONException {
+            String name = "";
+            String location = "";
+            String altitude = "";
+            String termsrv = "";
+            String termsrvPort = "";
+            String rpb = "";
+            String rpbPlug = "";
+            String owner = "";
 
-            String name = d.getString(TAG_NAME);
-            String location = d.getString(TAG_LOCATION);
-            String altitude = d.getString(TAG_ALTITUDE);
-            String termsrv = d.getString(TAG_TERMSRV);
-            String termsrvPort = d.getString(TAG_TERMSRV_PORT);
-            String rpb = d.getString(TAG_RPB);
-            String rpbPlug = d.getString(TAG_RPB_PLUG);
-            String owner = d.getString(TAG_OWNER);
+            // Checking if the fields exist in the JSON
+            if (d.has(TAG_NAME))
+                name = d.getString(TAG_NAME);
+            if (d.has(TAG_LOCATION))
+                location = d.getString(TAG_LOCATION);
+            if (d.has(TAG_ALTITUDE))
+                altitude = d.getString(TAG_ALTITUDE);
+            if (d.has(TAG_TERMSRV))
+                termsrv = d.getString(TAG_TERMSRV);
+            if (d.has(TAG_TERMSRV_PORT))
+                termsrvPort = d.getString(TAG_TERMSRV_PORT);
+            if (d.has(TAG_RPB))
+                rpb = d.getString(TAG_RPB);
+            if (d.has(TAG_RPB_PLUG))
+                rpbPlug = d.getString(TAG_RPB_PLUG);
+            if (d.has(TAG_OWNER))
+                owner = d.getString(TAG_OWNER);
 
             // tmp map for single device
             HashMap<String, String> device = new HashMap<String, String>();
