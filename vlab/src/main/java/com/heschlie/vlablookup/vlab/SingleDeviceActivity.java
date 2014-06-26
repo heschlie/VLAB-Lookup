@@ -11,7 +11,7 @@ import java.util.HashMap;
 /**
  * Brought to you by Stephen Schlie
  */
-public class SingleDeviceActivity extends Activity{
+public class SingleDeviceActivity extends Activity {
 
     private HashMap<String, HashMap<String, String>> ifaces;
     private String ifaceNames;

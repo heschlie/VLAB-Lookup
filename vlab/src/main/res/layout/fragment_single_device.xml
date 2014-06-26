@@ -1,0 +1,113 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/single_table"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:shrinkColumns="0"
+    android:stretchColumns="1"
+    >
+
+    <TextView
+        android:id="@+id/device_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:textColor="#00CC00"
+        android:textStyle="bold"
+        android:text="@string/test" />
+
+
+    <TextView
+        android:id="@+id/device_location"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="#C1C1C1"
+        android:text="@string/test"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="fill_parent"
+        android:layout_height="3dp"
+        android:background="#ECECEC" />
+
+    <TableRow>
+        <TextView
+            android:id="@+id/altitude_title"
+            style="@style/col1"
+            android:text="@string/altitude"/>
+
+        <TextView
+            android:id="@+id/device_altitude"
+            style="@style/col2"
+            />
+    </TableRow>
+
+
+    <TableRow>
+
+        <TextView
+            android:id="@+id/termsrv_title"
+            style="@style/col1"
+            android:text="@string/termsrv"
+            />
+
+        <TextView
+            android:id="@+id/device_termsrv"
+            style="@style/col2"
+            />
+    </TableRow>
+
+
+    <TableRow>
+
+        <TextView
+            android:id="@+id/rpb_title"
+            style="@style/col1"
+            android:text="@string/rpb"
+            />
+
+        <TextView
+            android:id="@+id/device_rpb"
+            style="@style/col2"
+            />
+    </TableRow>
+
+
+    <TableRow>
+
+        <TextView
+            android:text="@string/owner"
+            style="@style/col1" />
+
+        <TextView
+            android:id="@+id/device_owner"
+            style="@style/col2"
+            />
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+            android:text="@string/iface_title"
+            style="@style/col1" />
+
+        <TextView
+            android:id="@+id/interfaces"
+            style="@style/col2"
+            />
+    </TableRow>
+
+    <!--<FrameLayout>-->
+
+    <!--<Button-->
+    <!--android:layout_gravity="center"-->
+    <!--android:textSize="18sp"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="@string/btn_interfaces" />-->
+    <!--</FrameLayout>-->
+
+
+</TableLayout>

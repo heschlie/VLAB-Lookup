@@ -1,16 +1,12 @@
 package com.heschlie.vlablookup.vlab;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ListFragment;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.AttributeSet;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -34,7 +30,7 @@ import java.util.Iterator;
 /**
  * Created by heschlie on 6/5/2014.
  */
-public class MainFragActivity extends android.support.v4.app.ListFragment {
+public class MainFragActivity extends ListFragment {
     private ProgressDialog pDialog;
     // URL to get JSON
     private static final String urlPrefix = "http://json.lab.nbttech.com/v1/resources/names/";
@@ -100,9 +96,6 @@ public class MainFragActivity extends android.support.v4.app.ListFragment {
                 }
             }
         });
-
-
-
         return view;
     }
 
