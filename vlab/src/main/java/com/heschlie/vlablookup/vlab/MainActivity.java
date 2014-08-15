@@ -49,15 +49,15 @@ public class MainActivity extends Activity implements SingleDeviceFragment.OnFra
 
     @Override
     public void sendData(int destFrag, HashMap<String, String> device, HashMap<String, HashMap<String, String>> interfaces) {
-//        SingleDeviceFragment singleDeviceFrag = (SingleDeviceFragment) fm.findFragmentById(R.id.single_table);
-//        if (singleDeviceFrag != null)
-//            singleDeviceFrag.loadDeviceInfo(device, interfaces);
-//        else {
+        SingleDeviceFragment singleDeviceFrag = (SingleDeviceFragment) getFragmentManager().findFragmentById(R.id.single_device);
+        if (singleDeviceFrag != null)
+            singleDeviceFrag.loadDeviceInfo(device, interfaces);
+        else {
             SingleDeviceFragment newFragment = SingleDeviceFragment.newInstance(device, interfaces);
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_container, newFragment);
             ft.addToBackStack(null);
             ft.commit();
-//        }
+        }
     }
 }

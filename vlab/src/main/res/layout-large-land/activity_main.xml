@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:baselineAligned="false"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <fragment android:name="com.heschlie.vlablookup.vlab.MainFragActivity"
+        android:id="@+id/device_list"
+        android:layout_weight="25"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        tools:layout="@layout/device_list_fragment" />
+
+    <fragment android:name="com.heschlie.vlablookup.vlab.SingleDeviceFragment"
+        android:id="@+id/single_device"
+        android:layout_weight="75"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_single_device" />
+
+</LinearLayout>
