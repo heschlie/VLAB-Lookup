@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -120,19 +119,27 @@ public class MainFragActivity extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            deviceList = (ArrayList<HashMap<String, String>>) savedInstanceState.getSerializable("deviceList");
+            interfacesList = (ArrayList<HashMap<String, HashMap<String, String>>>) savedInstanceState.getSerializable("interfaces");
+        }
         ListView lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent in = new Intent(getActivity(), SingleDeviceActivity.class);
-                in.putExtra("device", deviceList.get(i));
-                if (interfacesList.get(i) != null){
-                    in.putExtra("interfaces", interfacesList.get(i));
-                }
-
-                startActivity(in);
+                if (interfacesList.get(0) != null)
+                    mCallBack.sendData(0, deviceList.get(0), interfacesList.get(0));
+                else
+                    mCallBack.sendData(0, deviceList.get(0), null);
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("deviceList", deviceList);
+        outState.putSerializable("interfaces", interfacesList);
     }
 
     private class GetDevices extends AsyncTask<String, Void, Integer> {

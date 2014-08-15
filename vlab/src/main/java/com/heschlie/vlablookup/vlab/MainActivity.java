@@ -1,23 +1,22 @@
 package com.heschlie.vlablookup.vlab;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.HashMap;
 
-public class MainActivity extends FragmentActivity implements SingleDeviceFragment.OnFragmentInteractionListener, MainFragActivity.SingleFragmentData{
-    private FragmentManager fm;
+public class MainActivity extends Activity implements SingleDeviceFragment.OnFragmentInteractionListener, MainFragActivity.SingleFragmentData{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fm = getFragmentManager();
+        FragmentManager fm = getFragmentManager();
 
         Fragment frag = new MainFragActivity();
         FragmentTransaction ft = fm.beginTransaction();
@@ -55,7 +54,7 @@ public class MainActivity extends FragmentActivity implements SingleDeviceFragme
 //            singleDeviceFrag.loadDeviceInfo(device, interfaces);
 //        else {
             SingleDeviceFragment newFragment = SingleDeviceFragment.newInstance(device, interfaces);
-            FragmentTransaction ft = fm.beginTransaction();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_container, newFragment);
             ft.addToBackStack(null);
             ft.commit();

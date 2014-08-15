@@ -56,9 +56,7 @@ public class SingleDeviceFragment extends Fragment {
     public static SingleDeviceFragment newInstance(HashMap<String, String> device, HashMap<String, HashMap<String, String>> interfaces) {
         SingleDeviceFragment fragment = new SingleDeviceFragment();
         Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, device);
         args.putSerializable(ARG_PARAM1, device);
-//        args.putString(ARG_PARAM2, interfaces);
         args.putSerializable(ARG_PARAM2, interfaces);
         fragment.setArguments(args);
         return fragment;
@@ -73,9 +71,6 @@ public class SingleDeviceFragment extends Fragment {
         if (getArguments() != null) {
             device = (HashMap<String, String>) getArguments().getSerializable(ARG_PARAM1);
             interfaces = (HashMap<String, HashMap<String, String>>) getArguments().getSerializable(ARG_PARAM2);
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-
         }
     }
 
