@@ -1,15 +1,7 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <fragment
-        android:id="@+id/deviceListFrag"
-        android:name="com.heschlie.vlablookup.vlab.MainFragActivity"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/device_list_fragment" />
-</RelativeLayout>
+    />
 
 

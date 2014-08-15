@@ -1,12 +1,13 @@
 package com.heschlie.vlablookup.vlab;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import java.util.Iterator;
  */
 public class MainFragActivity extends ListFragment {
     private ProgressDialog pDialog;
+    private SingleFragmentData mCallBack;
     // URL to get JSON
     private static final String urlPrefix = "http://json.lab.nbttech.com/v1/resources/names/";
     //public String url;
@@ -54,11 +56,27 @@ public class MainFragActivity extends ListFragment {
     //Hashmap for interfaces
     ArrayList<HashMap<String, HashMap<String, String>>> interfacesList;
 
+
+    public interface SingleFragmentData {
+        public void sendData(int destFrag, HashMap<String, String> device, HashMap<String,
+                             HashMap<String, String>> interfaces);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         deviceList = new ArrayList<HashMap<String, String>>();
         interfacesList = new ArrayList<HashMap<String, HashMap<String,String>>>();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallBack = (SingleFragmentData) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement SingleFragmentData");
+        }
     }
 
     @Override
@@ -290,13 +308,17 @@ public class MainFragActivity extends ListFragment {
                 setListAdapter(adapter);
 
                 if (deviceCount == 1) {
-                    Intent in = new Intent(getActivity(), SingleDeviceActivity.class);
-                    in.putExtra("device", deviceList.get(0));
-                    if (interfacesList.get(0) != null){
-                        in.putExtra("interfaces", interfacesList.get(0));
-                    }
-
-                    startActivity(in);
+                    if (interfacesList.get(0) != null)
+                        mCallBack.sendData(0, deviceList.get(0), interfacesList.get(0));
+                    else
+                        mCallBack.sendData(0, deviceList.get(0), null);
+//                    Intent in = new Intent(getActivity(), SingleDeviceActivity.class);
+//                    in.putExtra("device", deviceList.get(0));
+//                    if (interfacesList.get(0) != null){
+//                        in.putExtra("interfaces", interfacesList.get(0));
+//                    }
+//
+//                    startActivity(in);
                 }
             }
 

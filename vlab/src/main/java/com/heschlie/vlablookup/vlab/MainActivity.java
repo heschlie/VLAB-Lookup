@@ -1,12 +1,16 @@
 package com.heschlie.vlablookup.vlab;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends FragmentActivity {
+import java.util.HashMap;
+
+public class MainActivity extends FragmentActivity implements SingleDeviceFragment.OnFragmentInteractionListener, MainFragActivity.SingleFragmentData{
     private FragmentManager fm;
 
     @Override
@@ -14,6 +18,11 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         fm = getFragmentManager();
+
+        Fragment frag = new MainFragActivity();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.add(R.id.fragment_container, frag);
+        ft.commit();
     }
 
     @Override
@@ -35,4 +44,21 @@ public class MainActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onFragmentInteraction(HashMap<String, String> jsonData) {
+    }
+
+    @Override
+    public void sendData(int destFrag, HashMap<String, String> device, HashMap<String, HashMap<String, String>> interfaces) {
+//        SingleDeviceFragment singleDeviceFrag = (SingleDeviceFragment) fm.findFragmentById(R.id.single_table);
+//        if (singleDeviceFrag != null)
+//            singleDeviceFrag.loadDeviceInfo(device, interfaces);
+//        else {
+            SingleDeviceFragment newFragment = SingleDeviceFragment.newInstance(device, interfaces);
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.fragment_container, newFragment);
+            ft.addToBackStack(null);
+            ft.commit();
+//        }
+    }
 }
